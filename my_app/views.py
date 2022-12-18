@@ -4,6 +4,8 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth import authenticate, login, logout
+from django.contrib import messages
+
 # Create your views here.
 
 
@@ -22,29 +24,23 @@ def register(request):
         user_form = UserForm(data=request.POST)
         profile_form = UserProfileInfoForm(data=request.POST)
 
-        if user_form.is_valid() and profile_form.is_valid():
+        # if user_form.is_valid() and profile_form.is_valid():
+        if user_form.is_valid():
 
             user = user_form.save()
             user.set_password(user.password)
             user.save()
 
-            profile = profile_form.save(commit=False)
-            profile.user = user
+            # profile = profile_form.save(commit=False)
+            # profile.user = user
 
-            if 'profile_pic' in request.FILES:
-                profile.profile_pic = request.FILES['profile_pic']
+            # if 'profile_pic' in request.FILES:
+            #     profile.profile_pic = request.FILES['profile_pic']
+            #     profile.save()
+            registered = True
 
-                profile.save()
-
-                registered = True
-
-                # return render(request, 'my_app/register.html', {
-                #     'user_form': user_form,
-                #     'profile_form': profile_form,
-                #     'registered': registered,
-                #     'user_form': UserForm(),
-                #     'profile_form': UserProfileInfoForm()
-                # })
+            messages.success(request, 'Regsitered Successfully.')
+            return HttpResponseRedirect('/my_app/register')
 
         else:
             print(user_form.errors, profile_form.errors)
@@ -56,9 +52,7 @@ def register(request):
     return render(request, 'my_app/register.html', {
         'user_form': user_form,
         'profile_form': profile_form,
-        'registered': registered,
-        'user_form': user_form,
-        'profile_form': profile_form
+        'registered': registered
     })
 
 
@@ -67,6 +61,15 @@ def user_logout(request):
     logout(request)
     return HttpResponseRedirect('../../my_app/')
     # return HttpResponseRedirect(reverse('index'))
+
+
+@login_required
+def profile(request):
+
+    if request.method == 'POST':
+        return render(request, 'my_app/profile.html', {})
+    else:
+        return render(request, 'my_app/profile.html', {})
 
 
 def user_login(request):

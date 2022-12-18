@@ -1,0 +1,101 @@
+{% extends "my_app/base.html" %} {% block body_block %}
+
+<div class="grid-container">
+  <h3>Update Profile</h3>
+  {% if err|length > 0 %}
+  <div class="callout alert" data-closable>
+    <p>{{ err }}</p>
+    <button
+      class="close-button"
+      aria-label="Dismiss alert"
+      type="button"
+      data-close
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  {% endif %}
+
+  <form method="post" action="{% url 'my_app:profile' %}">
+    {% csrf_token %}
+    <ul
+      class="accordion"
+      data-accordion
+      style="margin-top: 15px; border-radius: 5px"
+    >
+      <li class="accordion-item is-active" data-accordion-item>
+        <!-- Accordion tab title -->
+        <a href="#" class="accordion-title">Personal Info</a>
+
+        <!-- Accordion tab content: it would start in the open state due to using the `is-active` state class. -->
+        <div class="accordion-content" data-tab-content>
+          <label for="username">Username:</label>
+          <input
+            type="text"
+            name="username"
+            placeholder="Enter username"
+            value="{{ user.username }}"
+            disabled
+          />
+
+          <label for="email">Email:</label>
+          <input
+            type="email"
+            name="username"
+            placeholder="Enter username"
+            value="{{ user.email }}"
+            disabled
+          />
+
+          <label for="firstname">Firstname:</label>
+          <input
+            type="text"
+            name="firstname"
+            placeholder="Enter firstname"
+            value="{{ user.firstname }}"
+          />
+
+          <label for="lastname">Lastname:</label>
+          <input
+            type="text"
+            name="lastname"
+            placeholder="Enter lastname"
+            value="{{ user.lastname }}"
+          />
+        </div>
+      </li>
+      <!-- ... -->
+
+      <li class="accordion-item" data-accordion-item>
+        <!-- Accordion tab title -->
+        <a href="#" class="accordion-title">Change Password</a>
+
+        <div class="accordion-content" data-tab-content>
+          <label for="password">Old Password:</label>
+          <input
+            type="password"
+            name="old_password"
+            placeholder="Enter old password"
+          />
+
+          <label for="password">New Password:</label>
+          <input
+            type="password"
+            name="new_password"
+            placeholder="Enter new password"
+          />
+
+          <label for="confirm_password">Confirm Password:</label>
+          <input
+            type="password"
+            name="confirm_password"
+            placeholder="Enter Confirm password"
+          />
+        </div>
+      </li>
+    </ul>
+    <button type="submit" class="button">Update</button>
+  </form>
+
+  {% endblock %}
+</div>

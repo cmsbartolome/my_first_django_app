@@ -4,7 +4,9 @@ from django.contrib.auth.models import User
 
 
 class UserProfileInfo(models.Model):
-
+    email = models.EmailField(max_length=255, unique=True)
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     # additional fields

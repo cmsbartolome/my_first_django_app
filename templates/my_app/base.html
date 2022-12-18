@@ -44,6 +44,72 @@
       crossorigin="anonymous"
     ></script>
   </head>
+  <style>
+    .top-bar,
+    .top-bar ul {
+      background-color: #0a0a0a;
+      color: #fff;
+    }
+    .errorlist,
+    .alert {
+      width: 100%;
+      background-color: #f8d7da;
+      color: #721c24;
+      padding: 10px;
+      list-style: none;
+    }
+    .button {
+      border-radius: 5px;
+    }
+    [type="color"],
+    [type="date"],
+    [type="datetime-local"],
+    [type="datetime"],
+    [type="email"],
+    [type="month"],
+    [type="number"],
+    [type="password"],
+    [type="search"],
+    [type="tel"],
+    [type="text"],
+    [type="time"],
+    [type="url"],
+    [type="week"],
+    textarea {
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      -webkit-box-shadow: inset 0 1px 1px rgb(0 0 0 / 8%);
+      box-shadow: inset 0 1px 1px rgb(0 0 0 / 8%);
+      -webkit-transition: border-color ease-in-out 0.15s,
+        -webkit-box-shadow ease-in-out 0.15s;
+      -o-transition: border-color ease-in-out 0.15s,
+        box-shadow ease-in-out 0.15s;
+      transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+    }
+
+    [type="color"]:focus,
+    [type="date"]:focus,
+    [type="datetime-local"]:focus,
+    [type="datetime"]:focus,
+    [type="email"]:focus,
+    [type="month"]:focus,
+    [type="number"]:focus,
+    [type="password"]:focus,
+    [type="search"]:focus,
+    [type="tel"]:focus,
+    [type="text"]:focus,
+    [type="time"]:focus,
+    [type="url"]:focus,
+    [type="week"]:focus,
+    textarea:focus {
+      border-color: #66afe9;
+      outline: 0;
+      -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075),
+        0 0 8px rgba(102, 175, 233, 0.6);
+      box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075),
+        0 0 8px rgba(102, 175, 233, 0.6);
+    }
+  </style>
   <body>
     <div
       class="title-bar"
@@ -55,18 +121,23 @@
         type="button"
         data-toggle="responsive-menu"
       ></button>
-      <div class="title-bar-title">Menu</div>
+      <div class="title-bar-title">My First Django App</div>
     </div>
 
     <div class="top-bar" id="responsive-menu">
       <div class="grid-container">
         <div class="top-bar-left">
-          <ul class="dropdown menu" data-dropdown-menu>
+          <ul class="menu">
             <li class="menu-text">My First Django App</li>
+          </ul>
+        </div>
+        <div class="top-bar-right">
+          <ul class="dropdown menu" data-dropdown-menu>
             <li class="has-submenu">
               <a href="{% url 'my_app:index' %}">Home</a>
               <ul class="submenu menu vertical" data-submenu>
                 {% if user.is_authenticated %}
+                <li><a href="{% url 'profile' %}">Profile</a></li>
                 <li><a href="{% url 'logout' %}">Logout</a></li>
                 {% else %}
                 <li><a href="{% url 'my_app:login' %}">Login</a></li>
@@ -75,12 +146,10 @@
                 {% endif %}
               </ul>
             </li>
-          </ul>
-        </div>
-        <div class="top-bar-right">
-          <ul class="menu">
+            {% if user.is_authenticated == false %}
             <li><a href="#0">About-us</a></li>
             <li><a href="#0">Contact-us</a></li>
+            {% endif %}
           </ul>
           <!-- <ul class="menu">
             <li><input type="search" placeholder="Search" /></li>

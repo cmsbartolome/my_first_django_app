@@ -4,17 +4,7 @@
     <div class="card-section">
       <h3>Sign-in</h3>
       {% if err|length > 0 %}
-      <div class="callout alert" data-closable>
-        <p>{{ err }}</p>
-        <button
-          class="close-button"
-          aria-label="Dismiss alert"
-          type="button"
-          data-close
-        >
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
+      <div class="callout alert" data-closable>{{ err }}</div>
       {% endif %}
       <form method="post" action="{% url 'my_app:login' %}">
         {% csrf_token %}

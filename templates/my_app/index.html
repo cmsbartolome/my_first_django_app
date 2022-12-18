@@ -1,9 +1,9 @@
-{% extends "my_app/base.html" %}
+{% extends "my_app/base.html" %} {% block body_block %}
 
-{% block body_block %}
-
-<div class="jumbotron">
-    <h1>My First Django App</h1>
+<div class="" style="margin-top: 15px">
+  {% if user.is_authenticated %} Welcome {{ user.username }} {% else %}
+  <h1>My First Django App</h1>
+  {% endif %}
 </div>
 
 {% endblock %}
