@@ -1,13 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
-# Create your models here.
-
 
 class UserProfileInfo(models.Model):
-    email = models.EmailField(max_length=255, unique=True)
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
 
     # additional fields
     portfolio_site = models.URLField(blank=True)
@@ -16,3 +11,18 @@ class UserProfileInfo(models.Model):
 
     def __str__(self):
         return self.user.username
+
+
+class Notes(models.Model):
+    # STATUS = (
+    # ('Pending','Pending')
+    # ('Approved','Approved')
+    # )
+    createdBy = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+    createdOn = models.DateTimeField(auto_now_add=True, null=True)
+    updatedOn = models.DateTimeField(auto_now=False, null=True)
+    description = models.CharField(max_length=5000, null=True, blank=True)
+    # status = models.CharField(max_length=200, null=True, choices=STATUS)
+
+    def __str__(self):
+        return self.description

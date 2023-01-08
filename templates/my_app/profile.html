@@ -1,6 +1,6 @@
 {% extends "my_app/base.html" %} {% block body_block %}
 
-<div class="grid-container">
+<div class="grid-container" style="margin-top: 15px">
   <h3>Update Profile</h3>
   {% if err|length > 0 %}
   <div class="callout alert" data-closable>
@@ -14,8 +14,19 @@
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
+  {% endif %} {% if suc|length > 0 %}
+  <div class="callout success" data-closable>
+    <p>{{ suc }}</p>
+    <button
+      class="close-button"
+      aria-label="Dismiss alert"
+      type="button"
+      data-close
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
   {% endif %}
-
   <form method="post" action="{% url 'my_app:profile' %}">
     {% csrf_token %}
     <ul
@@ -47,20 +58,20 @@
             disabled
           />
 
-          <label for="firstname">Firstname:</label>
+          <label for="first_name">Firstname:</label>
           <input
             type="text"
-            name="firstname"
+            name="first_name"
             placeholder="Enter firstname"
-            value="{{ user.firstname }}"
+            value="{{ user.first_name }}"
           />
 
-          <label for="lastname">Lastname:</label>
+          <label for="last_name">Lastname:</label>
           <input
             type="text"
-            name="lastname"
+            name="last_name"
             placeholder="Enter lastname"
-            value="{{ user.lastname }}"
+            value="{{ user.last_name }}"
           />
         </div>
       </li>
@@ -69,9 +80,22 @@
       <li class="accordion-item" data-accordion-item>
         <!-- Accordion tab title -->
         <a href="#" class="accordion-title">Change Password</a>
-
         <div class="accordion-content" data-tab-content>
-          <label for="password">Old Password:</label>
+          <div class="callout alert" data-closable>
+            <p>
+              Please note that changing your password will automatically logout
+              your account
+            </p>
+            <button
+              class="close-button"
+              aria-label="Dismiss alert"
+              type="button"
+              data-close
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <label for="old_password">Old Password:</label>
           <input
             type="password"
             name="old_password"
@@ -81,7 +105,7 @@
           <label for="password">New Password:</label>
           <input
             type="password"
-            name="new_password"
+            name="password"
             placeholder="Enter new password"
           />
 

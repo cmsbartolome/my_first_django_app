@@ -1,7 +1,50 @@
 {% extends "my_app/base.html" %} {% block body_block %}
 
 <div class="" style="margin-top: 15px">
-  {% if user.is_authenticated %} Welcome {{ user.username }} {% else %}
+  {% if user.is_authenticated %}
+  <h5>
+    Signed in as: {{ user.username }} ( {{ user.email }} )
+    <a class="small button" href="{% url 'profile' %}">Update your Profile</a>
+  </h5>
+  <br />
+  <a class="button" href="{% url 'my_app:add_notes' %}">Add a note</a>
+  <br />
+  <div class="container">
+    <table class="stack unstriped hover">
+      <!-- <thead>
+        <tr>
+          <td>Notes</td>
+          <td>Created By</td>
+          <td>Created On</td>
+        </tr>
+      </thead> -->
+      <tbody>
+        {% for note in notes %}
+        <tr>
+          <td>{{ note.description }}</td>
+          <td>{{ note.createdBy }}</td>
+          <td>{{ note.updatedOn }}</td>
+          <td>{{ note.createdOn }}</td>
+          <td>
+            <a
+              class="small button"
+              href="{% url 'my_app:update_notes' note.id %}"
+              >Edit</a
+            >
+          </td>
+          <td>
+            <a
+              class="small alert button"
+              href="{% url 'my_app:delete_notes' note.id %}"
+              >Delete</a
+            >
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
   <h1>My First Django App</h1>
   {% endif %}
 </div>
