@@ -10,11 +10,32 @@ from django.shortcuts import get_object_or_404
 from datetime import datetime
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
+from django.core.paginator import Paginator
+from django.contrib.auth import update_session_auth_hash
+from django.db.models import Q
 
 
 def index(request):
-    notes = Notes.objects.all()
-    return render(request, 'my_app/index.html', {'notes': notes})
+    keyword = request.GET.get('search') or ''
+
+    if (keyword != ''):
+        q_object = Q(description__icontains=keyword) | Q(id__icontains=keyword) | Q(createdBy__username=keyword) | Q(createdBy__first_name=keyword) | Q(createdBy__last_name=keyword)
+        notes_list = Notes.objects.filter(q_object)
+    else:
+        notes_list = Notes.objects.all()
+
+    # notes_list = Notes.objects.get_queryset().order_by('id')
+    page = request.GET.get('page', 1)
+
+    paginator = Paginator(notes_list, 2)
+    try:
+        notes = paginator.page(page)
+    except PageNotAnInteger:
+        notes = paginator.page(1)
+    except EmptyPage:
+        notes = paginator.page(paginator.num_pages)
+
+    return render(request, 'my_app/index.html', {'notes': notes, 'query':keyword})
 
 
 def user_login(request):
@@ -140,6 +161,7 @@ def profile(request):
         if (request.POST.get('password') != ""):
             user.password = make_password(password)
         user.save()
+        update_session_auth_hash(request, user)
 
         success_msg = 'Profile updated successfully'
         return render(request, 'my_app/profile.html', {'user': user, 'suc': success_msg})
