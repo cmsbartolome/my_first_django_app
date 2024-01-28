@@ -3,20 +3,8 @@
 <div class="grid-container" style="margin-top: 15px">
   <h3>Update Profile</h3>
   {% if err|length > 0 %}
-  <div class="callout alert" data-closable>
-    <p>{{ err }}</p>
-    <button
-      class="close-button"
-      aria-label="Dismiss alert"
-      type="button"
-      data-close
-    >
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  {% endif %} {% if suc|length > 0 %}
-  <div class="callout success" data-closable>
-    <p>{{ suc }}</p>
+  <div class="callout alert callout-mod" data-closable>
+    <span style="color:crimson; font-weight: 300;"><i class="fa-solid fa-circle-exclamation"></i>&nbsp;{{ err }}</span>
     <button
       class="close-button"
       aria-label="Dismiss alert"
@@ -27,7 +15,20 @@
     </button>
   </div>
   {% endif %}
-  <form method="post" action="{% url 'my_app:profile' %}">
+  {% if suc|length > 0 %}
+  <div class="callout-mod callout success" data-closable>
+    <strong style="color: darkgreen; font-weight: 300;"><i class="fa-solid fa-circle-check"></i>&nbsp;{{ suc }}</strong>   
+    <button
+      class="close-button"
+      aria-label="Dismiss alert"
+      type="button"
+      data-close
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  {% endif %}
+  <form method="post" action="{% url 'my_app:profile' %}" enctype="multipart/form-data">
     {% csrf_token %}
     <ul
       class="accordion"
@@ -40,6 +41,16 @@
 
         <!-- Accordion tab content: it would start in the open state due to using the `is-active` state class. -->
         <div class="accordion-content" data-tab-content>
+          {% if user_info.profile_pic != '' %}
+            <img src="/static/{{user_info.profile_pic}}" width="200" height="200"/>
+            <br/>
+          {% else %}
+            <input style="display: none;" type="file" name="profile_pic" accept="image/*" id="profile_pic" >
+            <label for="profile_pic">
+              <span><i class="fa fa-camera"></i>&nbsp;Upload your profile photo</span>
+            </label>
+            <img id="img" src="https://dummyimage.com/200x200/eeeeee/aaa" alt="your profile image"  width="200" height="200"/>
+          {% endif %}
           <label for="username">Username:</label>
           <input
             type="text"
@@ -64,6 +75,8 @@
             name="first_name"
             placeholder="Enter firstname"
             value="{{ user.first_name }}"
+            id="firstname"
+            onchange="checkField(this.value, 'firstname')"
           />
 
           <label for="last_name">Lastname:</label>
@@ -72,34 +85,33 @@
             name="last_name"
             placeholder="Enter lastname"
             value="{{ user.last_name }}"
+            id="lastname"
+            onchange="checkField(this.value, 'lastname')"
           />
+
+          <label for="portfolio">Portfolio site address:</label>
+          <input
+            type="text"
+            name="portfolio_site"
+            placeholder="Enter portfolio site"
+            value="{{user_info.portfolio_site}}"
+            id="portfolio_site"
+            onchange="checkField(this.value, 'portfolio_site')"
+          /> 
+
         </div>
       </li>
-      <!-- ... -->
 
       <li class="accordion-item" data-accordion-item>
         <!-- Accordion tab title -->
         <a href="#" class="accordion-title">Change Password</a>
         <div class="accordion-content" data-tab-content>
-          <div class="callout alert" data-closable>
-            <p>
-              Please note that changing your password will automatically logout
-              your account
-            </p>
-            <button
-              class="close-button"
-              aria-label="Dismiss alert"
-              type="button"
-              data-close
-            >
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
           <label for="old_password">Old Password:</label>
           <input
             type="password"
             name="old_password"
             placeholder="Enter old password"
+            id="old_password"
           />
 
           <label for="password">New Password:</label>
@@ -107,6 +119,7 @@
             type="password"
             name="password"
             placeholder="Enter new password"
+            id="password"
           />
 
           <label for="confirm_password">Confirm Password:</label>
@@ -114,6 +127,7 @@
             type="password"
             name="confirm_password"
             placeholder="Enter Confirm password"
+            id="confirm_password"
           />
         </div>
       </li>
@@ -121,5 +135,26 @@
     <button type="submit" class="button">Update</button>
   </form>
 
+  <script>
+    function checkField(val, field) {
+      if (val) {
+          $('#'+field).removeClass('error_input');
+      } else {
+          $('#'+field).addClass('error_input');
+      }
+    }
+    
+    $('#img').hide();
+    $('#del').hide();
+    profile_pic.onchange = evt => {
+    const [file] = profile_pic.files
+    if (file) {
+      $('#img').fadeIn();
+      img.src = URL.createObjectURL(file)
+      $('#del').fadeIn();
+    }
+  }
+  </script>
+  
   {% endblock %}
 </div>

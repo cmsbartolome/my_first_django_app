@@ -1,4 +1,6 @@
-{% extends "my_app/base.html" %} {% block body_block %}
+{% extends "my_app/base.html" %}
+
+{% block body_block %}
 
 <div class="" style="margin-top: 15px">
   <h3>Add Notes</h3>
@@ -7,7 +9,7 @@
     class="callout {% if message.tags %} {{ message.tags }} {% endif %}"
     data-closable
   >
-    {{ message }}
+    {{ message }} <a href="{% url 'my_app:index' %}">Go back to notes list</a>
     <button
       class="close-button"
       aria-label="Dismiss alert"
@@ -20,12 +22,85 @@
   {% endfor %} {% endif %}
   <div class="card" style="margin-top: 15px; border-radius: 5px">
     <div class="card-section">
-      <form method="post">
-        {% csrf_token %} {{ notes_form.as_p }}
+      <form method="post" id="notes_form">
+        {% csrf_token %} 
+        <!-- {{ notes_form.as_p }} -->
+        <label for="id_title">Title:</label>
+        <input type="text" name="title" id="id_title" >
+        <label for="id_status">Status:</label>
+        <select name="status" id="id_status">
+          <option value="Active">Active</option>
+          <option value="In-active">In active</option>
+        </select>
+        <label for="id_description">Notes:</label>
+        <textarea name="description" id="id_description" class="summernote"></textarea>
+        <br/>
         <button type="submit" class="button">Add</button>
       </form>
     </div>
   </div>
 </div>
 
+<script>
+  $(document).ready(function () {
+      $('.summernote').summernote({
+        height: 300,
+        placeholder: 'type starting with @',
+        hintMode: 'words',
+        hintSelect: 'next',
+        hint: {
+          mentions: [
+            {
+              name: 'Jayden Smith',
+              url: 'http://example.org/person/jayden-smith'
+            },
+            {
+              name: 'Peter Pan',
+              url: 'http://example.org/person/peter-pan'
+            },
+            {
+              name: 'Lorca',
+              url: 'http://example.org/person/lorca'
+            },
+            {
+              name: 'David Summer',
+              url: 'http://example.org/person/david-summer'
+            }
+          ],
+          match: /\B@([a-z ]*)/i,
+          search: function (keyword, callback) {
+            callback($.grep(this.mentions, function (item) {
+              return item.name.toLowerCase().indexOf(keyword.toLowerCase()) == 0;
+            }));
+          },
+          template: function(item) {
+            return item.name;
+          },
+          content: function (item) {
+            return $('<a>')
+                .attr('href', item.url)
+                .text('@' + item.name)
+                .get(0);
+          }
+        }
+      });
+      $('#notes_form').on('submit', function(e){
+        e.preventDefault();
+        var note = $('textarea').val();
+        var title = $('#id_title').val();
+        var status = $('#id_status').val();
+
+        if (!title || title == '') {
+            alert('Please add a title');
+            return;
+        } 
+
+        if (!note || note == '') {
+            alert('Please add a note');
+            return;
+        } 
+        this.submit();
+      });
+ });
+</script>
 {% endblock %}

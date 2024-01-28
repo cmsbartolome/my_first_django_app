@@ -1,23 +1,105 @@
 {% extends "my_app/base.html" %} {% block body_block %}
 <div class="grid-container">
-  <div class="grid-x">
-    <div class="cell large-4 small-12">
-      {% if messages %} {% for message in messages %}
-      <div class="callout {% if message.tags %} {{ message.tags }} {% endif %}">
-        {{ message }}
-      </div>
-      {% endfor %} {% endif %}
-      <div class="card" style="margin-top: 15px; border-radius: 5px">
+  <div class="grid-x grid-margin-x">
+    <div class="cell large-6 small-12">
+      <div class="card {% if registered == False and messages %} animate__animated animate__shakeX {% endif %}" style="margin-top: 15px; border-radius: 5px">
         <div class="card-section">
           <h3>Sign-up</h3>
           <form method="post" enctype="multipart/form-data">
-            {% csrf_token %} {{ user_form.as_p }}
-            <!-- {{ profile_form.as_p }} -->
-            <button type="submit" class="button">Register</button>
+            {% csrf_token %} 
+            <!-- {{ user_form.as_p }}
+            {{ profile_form.as_p }} -->
+            <p>
+              <label for="id_username">Username:</label>
+              <input type="text" name="username" id="username" class="{% if registered == False and messages %} error_input {% endif %}" onchange="checkField(this.value, 'username')">
+            </p>
+            <p>
+              <label for="id_email">Email:</label>
+              <input type="email" name="email" id="email" class="{% if registered == False and messages %} error_input {% endif %}" onchange="checkField(this.value, 'email')" >
+            </p>
+            <p>
+              <label for="id_password">Password:</label>
+              <input type="password" name="password" maxlength="100" minlength="10" id="password" class="{% if registered == False and messages %} error_input {% endif %}" onchange="checkField(this.value, 'password')">
+            </p>
+            <p>
+              <label for="id_password">Confirm Password:</label>
+              <input type="password" name="conf_password" maxlength="100" minlength="10" id="conf_password" class="{% if registered == False and messages %} error_input {% endif %}" onchange="checkField(this.value, 'conf_password')">
+            </p>
+            <p>
+              <label for="id_first_name">First name:</label>
+              <input type="text" name="first_name" id="firstname" class="{% if registered == False and messages %} error_input {% endif %}" onchange="checkField(this.value, 'firstname')">
+            </p>
+            <p>
+              <label for="id_last_name">Last name:</label>
+              <input type="text" name="last_name" id="lastname" class="{% if registered == False and messages %} error_input {% endif %}" onchange="checkField(this.value, 'lastname')">
+            </p>
+            <p>
+              <label for="id_portfolio_site">Portfolio site:</label>
+              <input type="url" name="portfolio_site" maxlength="200" id="portfolio_site" class="{% if registered == False and messages %} error_input {% endif %}" onchange="checkField(this.value, 'portfolio_site')">
+            </p>
+            <p>
+              <input style="display: none;" type="file" name="profile_pic" accept="image/*" id="profile_pic" >
+              <label for="profile_pic">
+                <span><i class="fa fa-camera"></i>&nbsp;Upload your profile photo</span>
+              </label>
+              <img id="img" src="https://dummyimage.com/200x200/eeeeee/aaa" alt="your profile image"  width="200" height="200"/>
+            </p>
+            <button type="submit" class="button" >Register</button>
           </form>
         </div>
       </div>
     </div>
+    <div class="cell large-6 small-12">
+      {% if messages %} 
+          {% if registered == True %} 
+            <div class="callout success animate__animated animate__fadeIn callout-mod" data-closable>
+              <ul style="list-style: none;">
+              {% for message in messages %}
+                  <li>
+                      <strong style="color: darkgreen; font-weight: 300;"><i class="fa-solid fa-circle-check"></i>&nbsp;{{ message }}</strong>    
+                    <button class="close-button" aria-label="Dismiss alert" type="button" data-close><span aria-hidden="true">&times;</span>
+                    </button>
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+          {% else %} 
+            <div class="callout alert animate__animated animate__fadeIn callout-mod" data-closable>
+              <span style="color:crimson; font-weight: 300;"><i class="fa-solid fa-circle-exclamation"></i>&nbsp;Please review the following errors and try again</span>
+                <ul style="padding: 5px 20px;">
+                {% for message in messages %}
+                  <li>
+                    <strong style="color:crimson; font-weight: 300;">{{ message }}</strong> 
+                    <button class="close-button" aria-label="Dismiss alert" type="button" data-close><span aria-hidden="true">&times;</span>
+                    </button>
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+          {% endif %}
+    {% endif %}
+    </div>
   </div>
 </div>
+
+<script>
+  function checkField(val, field) {
+    if (val) {
+        $('#'+field).removeClass('error_input');
+    } else {
+        $('#'+field).addClass('error_input');
+    }
+  }
+  
+  $('#img').hide();
+  $('#del').hide();
+  profile_pic.onchange = evt => {
+  const [file] = profile_pic.files
+  if (file) {
+    $('#img').fadeIn();
+    img.src = URL.createObjectURL(file)
+    $('#del').fadeIn();
+  }
+}
+</script>
 {% endblock %}

@@ -1,38 +1,38 @@
 {% extends "my_app/base.html" %} {% block body_block %}
 <div class="grid-container">
+{% if err|length > 0 %}
+  <div class="callout alert animate__animated animate__fadeIn callout-mod" data-closable>
+    <span style="color:crimson; font-weight: 300;"><i class="fa-solid fa-circle-exclamation"></i>&nbsp;{{ err }}</span>
+    <button class="close-button" aria-label="Dismiss alert" type="button" data-close><span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+{% endif %}
   <div class="grid-x">
     <div class="cell large-4 small-12">
-      {% if err|length > 0 %}
-      <div class="callout alert" data-closable>
-        {{ err }}
-        <button
-          class="close-button"
-          aria-label="Dismiss alert"
-          type="button"
-          data-close
-        >
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      {% endif %}
-      <div class="card" style="margin-top: 15px; border-radius: 5px">
+      <div class="card {% if err %} animate__animated animate__shakeX {% endif %}" style="margin-top: 15px; border-radius: 5px">
         <div class="card-section">
           <h3>Sign-in</h3>
-          <form method="post" action="{% url 'my_app:login' %}">
+          <form method="post" id="l_form" action="{% url 'my_app:login' %}">
             {% csrf_token %}
             <label for="username">Username:</label>
-            <input type="text" name="username" placeholder="Enter username" />
+            <input type="text" name="username" id="username" onchange="checkField(this.value, 'username')" placeholder="Username" class="{% if err %} error_input {% endif %}" />
             <label for="password">Password:</label>
-            <input
-              type="password"
-              name="password"
-              placeholder="Enter password"
-            />
-            <button type="submit" class="button">Login</button>
+            <input type="password" name="password" id="password" onchange="checkField(this.value, 'password')" placeholder="Password" class="{% if err %} error_input {% endif %}"/>
+            <button type="submit" class="button btn_login">Login</button>
           </form>
         </div>
       </div>
     </div>
   </div>
 </div>
+
+<script>
+  function checkField(val, field) {
+    if (val) {
+        $('#'+field).removeClass('error_input');
+    } else {
+        $('#'+field).addClass('error_input');
+    }
+  }
+</script>
 {% endblock %}

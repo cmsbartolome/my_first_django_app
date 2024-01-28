@@ -26,8 +26,14 @@ class UserProfileInfoForm(forms.ModelForm):
 
 
 class NotesForm(forms.ModelForm):
+    STATUS = (
+    ('Active','active'),
+    ('In-active','in-active')
+    )
     description = forms.CharField(widget=forms.Textarea)
+    title = forms.CharField(widget=forms.TextInput(), required=True)
+    status = forms.CharField(widget=forms.Select(choices=STATUS), required=True)
 
     class Meta():
         model = Notes
-        fields = ('description',)
+        fields = ('description','title','status')

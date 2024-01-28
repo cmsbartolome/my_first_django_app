@@ -5,111 +5,21 @@
     <meta charset="utf-8" />
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- Compressed CSS -->
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/foundation-sites@6.7.5/dist/css/foundation.min.css"
-      crossorigin="anonymous"
-    />
-
-    <!-- foundation-float.min.css: Compressed CSS with legacy Float Grid -->
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/foundation-sites@6.7.5/dist/css/foundation-float.min.css"
-      crossorigin="anonymous"
-    />
-
-    <!-- foundation-prototype.min.css: Compressed CSS with prototyping classes -->
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/foundation-sites@6.7.5/dist/css/foundation-prototype.min.css"
-      crossorigin="anonymous"
-    />
-
-    <!-- foundation-rtl.min.css: Compressed CSS with right-to-left reading direction -->
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/foundation-sites@6.7.5/dist/css/foundation-rtl.min.css"
-      crossorigin="anonymous"
-    />
-
-    <script
-      src="https://code.jquery.com/jquery-3.6.1.min.js"
-      integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ="
-      crossorigin="anonymous"
-    ></script>
-    <!-- Compressed JavaScript -->
-    <script
-      src="https://cdn.jsdelivr.net/npm/foundation-sites@6.7.5/dist/js/foundation.min.js"
-      crossorigin="anonymous"
-    ></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/fontawesome.min.css"  />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/foundation-sites@6.7.5/dist/css/foundation.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/motion-ui@1.2.3/dist/motion-ui.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/foundation-sites@6.7.5/dist/css/foundation-prototype.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/foundation-sites@6.7.5/dist/css/foundation-rtl.min.css"/>
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/foundation-sites@6.7.5/dist/js/foundation.min.js"></script>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/summernote-lite.css' %}" />
+    <script src="{% static 'js/summernote-lite.js' %}"></script>
+    <link rel="stylesheet" rel="stylesheet" href="{% static 'css/custom.css' %}">    
   </head>
-  <style>
-    .top-bar,
-    .top-bar ul {
-      background-color: #0a0a0a;
-      color: #fff;
-    }
-    .errorlist,
-    .alert_msg {
-      width: 100%;
-      background-color: #f8d7da;
-      color: #721c24;
-      padding: 10px;
-      list-style: none;
-    }
-    .button {
-      border-radius: 5px;
-    }
-    [type="color"],
-    [type="date"],
-    [type="datetime-local"],
-    [type="datetime"],
-    [type="email"],
-    [type="month"],
-    [type="number"],
-    [type="password"],
-    [type="search"],
-    [type="tel"],
-    [type="text"],
-    [type="time"],
-    [type="url"],
-    [type="week"],
-    textarea {
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      -webkit-box-shadow: inset 0 1px 1px rgb(0 0 0 / 8%);
-      box-shadow: inset 0 1px 1px rgb(0 0 0 / 8%);
-      -webkit-transition: border-color ease-in-out 0.15s,
-        -webkit-box-shadow ease-in-out 0.15s;
-      -o-transition: border-color ease-in-out 0.15s,
-        box-shadow ease-in-out 0.15s;
-      transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
-    }
-
-    [type="color"]:focus,
-    [type="date"]:focus,
-    [type="datetime-local"]:focus,
-    [type="datetime"]:focus,
-    [type="email"]:focus,
-    [type="month"]:focus,
-    [type="number"]:focus,
-    [type="password"]:focus,
-    [type="search"]:focus,
-    [type="tel"]:focus,
-    [type="text"]:focus,
-    [type="time"]:focus,
-    [type="url"]:focus,
-    [type="week"]:focus,
-    textarea:focus {
-      border-color: #66afe9;
-      outline: 0;
-      -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075),
-        0 0 8px rgba(102, 175, 233, 0.6);
-      box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075),
-        0 0 8px rgba(102, 175, 233, 0.6);
-    }
-  </style>
+ 
   <body>
     <div
       class="title-bar"
@@ -125,43 +35,75 @@
     </div>
 
     <div class="top-bar" id="responsive-menu">
-      <div class="grid-container">
-        <div class="top-bar-left">
-          <ul class="menu">
-            <li class="menu-text">My First Django App</li>
-          </ul>
-        </div>
-        <div class="top-bar-right">
-          <ul class="dropdown menu" data-dropdown-menu>
-            <li class="has-submenu">
-              <a href="{% url 'my_app:index' %}">Home</a>
-              <ul class="submenu menu vertical" data-submenu>
-                {% if user.is_authenticated %}
-                <li><a href="{% url 'my_app:profile' %}">Profile</a></li>
-                <li><a href="{% url 'logout' %}">Logout</a></li>
-                {% else %}
-                <li><a href="{% url 'my_app:login' %}">Login</a></li>
-                <li><a href="{% url 'my_app:register' %}">Register</a></li>
-                <li><a href="{% url 'admin:index' %}">Admin</a></li>
-                {% endif %}
-              </ul>
-            </li>
-            {% if user.is_authenticated == false %}
-            <li><a href="#0">About-us</a></li>
-            <li><a href="#0">Contact-us</a></li>
-            {% endif %}
-          </ul>
-          <!-- <ul class="menu">
-            <li><input type="search" placeholder="Search" /></li>
-            <li><button type="button" class="button">Search</button></li>
-          </ul> -->
-        </div>
+          <div class="top-bar-left show-for-large">
+            <ul class="menu">
+              <li class="menu-text"><span class="menu-icon" data-toggle="offCanvas"></span></li>
+              <li class="menu-text" data-hide-for="small">My First Django App</li>
+            </ul>
+          </div>
+          <div class="top-bar-right">
+            <ul class="dropdown menu" data-dropdown-menu>
+              <li class="has-submenu">
+                <a href="{% url 'my_app:index' %}">Home</a>
+                <ul class="submenu menu vertical" data-submenu>
+                  {% if user.is_authenticated %}
+                  <li><a href="{% url 'my_app:profile' %}">Profile</a></li>
+                  <li><a href="#" data-toggle="logoutModal">Logout</a></li>
+                  {% else %}
+                  <li><a href="{% url 'my_app:login' %}">Login</a></li>
+                  <li><a href="{% url 'my_app:register' %}">Register</a></li>
+                  <li><a href="{% url 'admin:index' %}">Admin</a></li>
+                  {% endif %}
+                </ul>
+              </li>
+              <li><a href="#0">About-us</a></li>
+              <li><a href="#0">Contact-us</a></li>
+              
+            </ul>
+            <!-- <ul class="menu">
+              <li><input type="search" placeholder="Search" /></li>
+              <li><button type="button" class="button">Search</button></li>
+            </ul> -->
       </div>
     </div>
 
-    <div class="grid-container">{% block body_block %} {% endblock %}</div>
+    <div class="grid-container">
+      {% block body_block %} {% endblock %}
+      {% if user.is_authenticated %}
+        <div class="reveal" id="logoutModal" data-reveal data-close-on-click="true" data-animation-in="slide-in-down" data-animation-out="slide-out-up">
+          <div style="padding: 10px;">
+            <h3>Are you sure you want to logout already</h3>
+            <a class="button alert" href="{% url 'logout' %}">Yes</a>
+            <button class="close-button" data-close aria-label="Close modal" type="button">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+        </div>
+      {% endif %}
+
+      <div class="cell small-1 medium-3 large-4 loader margin-bottom-3 loader">
+        <div class="sk-fading-circle">
+            <div class="sk-circle1 sk-circle"></div>
+            <div class="sk-circle2 sk-circle"></div>
+            <div class="sk-circle3 sk-circle"></div>
+            <div class="sk-circle4 sk-circle"></div>
+            <div class="sk-circle5 sk-circle"></div>
+            <div class="sk-circle6 sk-circle"></div>
+            <div class="sk-circle7 sk-circle"></div>
+            <div class="sk-circle8 sk-circle"></div>
+            <div class="sk-circle9 sk-circle"></div>
+            <div class="sk-circle10 sk-circle"></div>
+            <div class="sk-circle11 sk-circle"></div>
+            <div class="sk-circle12 sk-circle"></div>
+        </div>
+      </div>
+    </div>
   </body>
   <script>
     $(document).foundation();
+    window.addEventListener("load", function () {
+        const loader = document.querySelector(".loader");
+        loader.className+="  hidden";
+    })
   </script>
 </html>

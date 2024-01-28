@@ -1,0 +1,118 @@
+{% extends "my_app/base.html" %}
+
+{% block body_block %}
+
+<div class="notes-wrapper margin-top-3" >
+    {% for note in notes %}
+        <div class="cell small-1 medium-3 large-4 notes-box">
+            <div class="card" style="width: 50%">
+                <img src="https://picsum.photos/1200/500?random={{note.id}}">
+                <div class="card-section">
+                <h5>Author: {{ note.owner.username }}</h5>
+                <p>{{ note.description|safe }}</p>
+                <div class="">
+                    <a class="small button" href="{% url 'my_app:update_notes' note.id %}">Edit</a>
+                </div>
+                <div class="">
+                    <a class="small alert button" href="{% url 'my_app:delete_notes' note.id %}">Delete</a>
+                </div>
+                
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+    <div class="cell small-1 medium-3 large-4 loader margin-bottom-3">
+        <div class="sk-fading-circle">
+            <div class="sk-circle1 sk-circle"></div>
+            <div class="sk-circle2 sk-circle"></div>
+            <div class="sk-circle3 sk-circle"></div>
+            <div class="sk-circle4 sk-circle"></div>
+            <div class="sk-circle5 sk-circle"></div>
+            <div class="sk-circle6 sk-circle"></div>
+            <div class="sk-circle7 sk-circle"></div>
+            <div class="sk-circle8 sk-circle"></div>
+            <div class="sk-circle9 sk-circle"></div>
+            <div class="sk-circle10 sk-circle"></div>
+            <div class="sk-circle11 sk-circle"></div>
+            <div class="sk-circle12 sk-circle"></div>
+        </div>
+    </div>
+</div>
+
+
+<div>
+    <button class="small button" id="loadMoreBtn">Load More</button>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('.loader').fadeOut();
+        $('#loadMoreBtn').on('click', function(){
+            $('.loader').fadeIn();
+            var _currentResult = $(".notes-box").length;
+            $.ajax({
+                url: "{% url 'my_app:load-more' %}",
+                type: 'post',
+                data: {
+                    'offset':_currentResult,
+                    'csrfmiddlewaretoken': "{{ csrf_token }}" 
+                },
+                dataType: 'json',
+                beforeSend: function() {
+                    $('.loader').fadeIn();
+                    $('#loadMoreBtn').addClass('disabled').text('Loading....');
+                },
+                success: function(response) {
+                    $('.loader').show();
+                    var element=$('.notes-wrapper');
+                    console.log(response);
+              
+                    //var json_data=$.parseJSON(response.notes);
+                    var json_data = response.notes;
+
+                    $.each(json_data, function(index, data) {
+                        console.log(data);
+                        var id = parseInt(data.id);
+
+                        var isNum = /^\d*$/;
+
+                        if (!isNum.test(id)) {
+                            return;
+                        }
+
+                        var updateLink = "/my_app/update_notes/"+id;
+                        var deleteLink = "/my_app/delete_notes/"+id;
+
+                        element.append('<div class="cell small-1 medium-3 large-4">'+
+                                '<div class="card notes-box" style="width: 50%">'+
+                                    '<img src="https://picsum.photos/1200/500?random='+id+'">'+
+                                    '<div class="card-section">'+
+                                    '<h5>Author: '+data.owner.username+'</h5>'+
+                                    '<p>'+data.description+'</p>'+
+                                    '<div style="flex: start;">'+
+                                        '<a class="small button" href="'+updateLink+'">Edit</a>'+
+                                    '</div>'+
+                                    '<div style="flex: end;">'+
+                                        '<a class="small alert button" href="'+deleteLink+'">Delete</a>'+
+                                    '</div>'+
+                                    '</div>'+
+                                '</div>'+
+                            '</div>');
+                    });
+                   
+                    var _countTotal = $('.notes-box').length;
+
+                    if (_countTotal == response.totalResult) {
+                        $('.loader').fadeOut();
+                        $('#loadMoreBtn').remove();
+                    } else {
+                        $('.loader').fadeOut();
+                        $('#loadMoreBtn').removeClass('disabled').text('Load More');
+                    }
+                   
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

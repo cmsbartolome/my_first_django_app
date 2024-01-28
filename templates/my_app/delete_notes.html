@@ -1,7 +1,7 @@
 {% extends "my_app/base.html" %} {% block body_block %}
 
 <div class="" style="margin-top: 15px">
-  <h3>Are you sure to delete this note: "{{ item.description }}"?</h3>
+  <h3>Are you sure to delete this note: "{{ item.title }}"?</h3>
 
   <form method="post" action="{% url 'my_app:delete_notes' item.id %}">
     {% csrf_token %}

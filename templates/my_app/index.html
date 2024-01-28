@@ -1,91 +1,185 @@
 {% extends "my_app/base.html" %} {% block body_block %}
 
-<div class="" style="margin-top: 15px">
-  {% if user.is_authenticated %}
-  <h5>
-    Signed in as: {{ user.username }} ( {{ user.email }} )
-    <a class="small button" href="{% url 'profile' %}">Update your Profile</a>
-  </h5>
-  <br />
-  <div class="grid-x">
-    <div class="cell small-12 large-2"> <a class="button" href="{% url 'my_app:add_notes' %}">Add a note</a></div>
-    <div class="cell small-12 large-8">
-      <form method="get" action="">
-        <input type="search" name="search" value="{{ query }}" placeholder="Search your notes" />
-      </form>
+<div class="off-canvas-wrapper">
+  <div class="off-canvas position-left" id="offCanvas" data-off-canvas>
+     <!-- Close button -->
+     <button class="close-button" aria-label="Close menu" type="button" data-close>
+      <span aria-hidden="true">&times;</span>
+    </button>
+
+    <!-- Menu -->
+    <ul class="vertical menu">
+      <li><a href="#">Foundation</a></li>
+      <li><a href="#">Dot</a></li>
+      <li><a href="#">ZURB</a></li>
+      <li><a href="#">Com</a></li>
+      <li><a href="#">Slash</a></li>
+      <li><a href="#">Sites</a></li>
+    </ul>
+
+  </div>
+  <div class="off-canvas-content" data-off-canvas-content>
+    <div class="" style="margin-top: 15px">
+      {% if user.is_authenticated %}
+      <h5>
+        Signed in as: <b>{{ user.username }}</b> <i style="font-size: 14px;">({{ user.email }})</i>
+        <a class="small button" href="{% url 'profile' %}">Edit</a>
+      </h5>
+      <br />
+      <div class="grid-x">
+        <div class="cell small-12 large-2"> <a class="button" href="{% url 'my_app:add_notes' %}">Add a note</a></div>
+        <div class="cell small-12 large-8">
+          <form method="get" action="">
+            <input type="search" name="search" value="{{ query }}" placeholder="Search your notes" />
+          </form>
+        </div>
+      </div>
+      <br />
+      <div class="container">
+        <table class="stack unstriped hover">
+         
+            <tr>
+              <th width="200">Notes</th>
+              <th width="200">Status</th>
+              <th width="200">Last updated on</th>
+              <th width="200">created on</th>
+              <th width="200"></th>
+            </tr>
+      
+          <tbody>
+            {% for note in notes %}
+              <tr>
+                <td><a href="{% url 'my_app:update_notes' note.id %}">{{ note.title }}</a></td>
+                {% if note.status == 'Active' %}
+                  <td><strong style="color: darkgreen; font-weight: 300;">{{ note.status }}</strong></td>
+                {% else %}
+                  <td><strong style="color:crimson; font-weight: 300;">{{ note.status }}</strong></td>
+                {% endif %}
+                <td>{{ note.updatedOn }}</td>
+                <td>{{ note.createdOn }}</td>
+                <td>
+                  <a class="small button" href="{% url 'my_app:update_notes' note.id %}">Edit</a>
+                  <a class="small alert button" href="{% url 'my_app:delete_notes' note.id %}">Delete</a>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+    
+        {% if notes.has_other_pages %}
+          <nav aria-label="Pagination">
+            <ul class="pagination">
+              {% if notes.has_previous %}
+                {% if query %}
+                  <li class="pagination-previous"><a href="?page={{ notes.previous_page_number }}&search={{ query }}"></a></li>
+                {% else %}
+                  <li class="pagination-previous"><a href="?page={{ notes.previous_page_number }}"></a></li>
+                {% endif %}
+              {% else %}
+                <li class="pagination-previous disabled"><span></span></li>
+              {% endif %}
+    
+              {% for i in notes.paginator.page_range %}
+                {% if notes.number == i %}
+                  <li class="current">
+                    <span>{{ i }} <span class="sr-only"></span></span>
+                  </li>
+                {% else %}
+                  {% if query %}
+                    <li><a href="?page={{ i }}&search={{ query }}">{{ i }}</a></li>
+                  {% else %}
+                    <li><a href="?page={{ i }}">{{ i }}</a></li>
+                  {% endif %}
+                {% endif %}
+              {% endfor %}
+    
+            {% if notes.has_next %}
+              {% if query %}
+                <li class="pagination-next"><a href="?page={{ notes.next_page_number }}&search={{ query }}"></a></li>
+              {% else %}
+                <li class="pagination-next"><a href="?page={{ notes.next_page_number }}"></a></li>
+              {% endif %}
+              {% else %}
+                <li class="pagination-next disabled"><span></span></li>
+            {% endif %}
+          </ul>
+        </nav>
+        {% endif %}
+      </div>
+      {% else %}
+      <ul class="orbit-container">
+        <li class="orbit-slide is-active">
+          <figure class="orbit-figure">
+            <img class="orbit-image" src="https://picsum.photos/1200/500" alt="Space">
+            <figcaption class="orbit-caption">Space, the final frontier.</figcaption>
+          </figure>
+        </li>
+        <!-- More slides... -->
+      </ul>
+      <div class="orbit" role="region" aria-label="Favorite Space Pictures" data-orbit data-options="animInFromLeft:fade-in; animInFromRight:fade-in; animOutToLeft:fade-out; animOutToRight:fade-out;">
+        <div class="orbit-wrapper">
+          <div class="orbit-controls">
+            <button class="orbit-previous"><span class="show-for-sr">Previous Slide</span>&#9664;&#xFE0E;</button>
+            <button class="orbit-next"><span class="show-for-sr">Next Slide</span>&#9654;&#xFE0E;</button>
+          </div>
+          <ul class="orbit-container">
+            <li class="orbit-slide is-active">
+              <figure class="orbit-figure">
+                <img class="orbit-image" src="https://picsum.photos/1200/500?random=1" alt="Space">
+                <figcaption class="orbit-caption">Space, the final frontier.</figcaption>
+              </figure>
+            </li>
+            <li class="orbit-slide">
+              <figure class="orbit-figure">
+                <img class="orbit-image" src="https://picsum.photos/1200/500?random=2" alt="Space">
+                <figcaption class="orbit-caption">Lets Rocket!</figcaption>
+              </figure>
+            </li>
+            <li class="orbit-slide">
+              <figure class="orbit-figure">
+                <img class="orbit-image" src="https://picsum.photos/1200/500" alt="Space">
+                <figcaption class="orbit-caption">Encapsulating</figcaption>
+              </figure>
+            </li>
+            <li class="orbit-slide">
+              <figure class="orbit-figure">
+                <img class="orbit-image" src="https://picsum.photos/1200/500?random=2" alt="Space">
+                <figcaption class="orbit-caption">Outta This World</figcaption>
+              </figure>
+            </li>
+          </ul>
+        </div>
+        <nav class="orbit-bullets">
+          <button class="is-active" data-slide="0">
+            <span class="show-for-sr">First slide details.</span>
+            <span class="show-for-sr" data-slide-active-label>Current Slide</span>
+          </button>
+          <button data-slide="1"><span class="show-for-sr">Second slide details.</span></button>
+          <button data-slide="2"><span class="show-for-sr">Third slide details.</span></button>
+          <button data-slide="3"><span class="show-for-sr">Fourth slide details.</span></button>
+        </nav>
+      </div>
+    
+      <div class="grid-x">
+        {% for note in notes %}
+          <div class="cell small-1 medium-3 large-4">
+            <div class="card" style="width: 300px;">
+              <div class="card-divider">
+                This is a header
+              </div>
+              <img src="https://picsum.photos/1200/500?random={{note.id}}">
+              <div class="card-section">
+                <h4>This is a card.</h4>
+                <p>It has an easy to override visual style, and is appropriately subdued.</p>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+      {% endif %}
     </div>
   </div>
-  <br />
-  <div class="container">
-    <table class="stack unstriped hover">
-      <!-- <thead>
-        <tr>
-          <td>Notes</td>
-          <td>Created By</td>
-          <td>Created On</td>
-        </tr>
-      </thead> -->
-      <tbody>
-        {% for note in notes %}
-        <tr>
-          <td>{{ note.description }}</td>
-          <td>{{ note.createdBy }}</td>
-          <td>{{ note.updatedOn }}</td>
-          <td>{{ note.createdOn }}</td>
-          <td>
-            <a class="small button" href="{% url 'my_app:update_notes' note.id %}">Edit</a>
-          </td>
-          <td>
-            <a class="small alert button" href="{% url 'my_app:delete_notes' note.id %}">Delete</a>
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-
-    {% if notes.has_other_pages %}
-    <nav aria-label="Pagination">
-      <ul class="pagination">
-        {% if notes.has_previous %}
-        {% if query %}
-        <li class="pagination-previous"><a href="?page={{ notes.previous_page_number }}&search={{ query }}"></a></li>
-        {% else %}
-        <li class="pagination-previous"><a href="?page={{ notes.previous_page_number }}"></a></li>
-        {% endif %}
-        {% else %}
-        <li class="pagination-previous disabled"><span></span></li>
-        {% endif %}
-
-        {% for i in notes.paginator.page_range %}
-        {% if notes.number == i %}
-        <li class="current">
-          <span>{{ i }} <span class="sr-only"></span></span>
-        </li>
-        {% else %}
-        {% if query %}
-        <li><a href="?page={{ i }}&search={{ query }}">{{ i }}</a></li>
-        {% else %}
-        <li><a href="?page={{ i }}">{{ i }}</a></li>
-        {% endif %}
-        {% endif %}
-        {% endfor %}
-
-        {% if notes.has_next %}
-        {% if query %}
-        <li class="pagination-next"><a href="?page={{ notes.next_page_number }}&search={{ query }}"></a></li>
-        {% else %}
-        <li class="pagination-next"><a href="?page={{ notes.next_page_number }}"></a></li>
-        {% endif %}
-        {% else %}
-        <li class="pagination-next disabled"><span></span></li>
-        {% endif %}
-      </ul>
-    </nav>
-    {% endif %}
-  </div>
-  {% else %}
-  <h1>My First Django App</h1>
-  {% endif %}
 </div>
+
 
 {% endblock %}
