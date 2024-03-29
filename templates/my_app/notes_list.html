@@ -1,0 +1,223 @@
+{% extends "my_app/base.html" %} {% block body_block %}
+
+<div class="off-canvas-wrapper">
+    <div class="" style="margin-top: 15px">
+      <div class="grid-x">
+        <div class="cell small-12 large-2"> <a class="button" href="{% url 'my_app:add_notes' %}">Add a note</a></div>
+        <div class="cell small-12 large-8">
+          <form method="get" action="">
+            <input type="search" name="search" value="{{ query }}" placeholder="Search your notes" />
+          </form>
+        </div>
+      </div>
+      <br />
+      <div class="container">
+        {% if query %}
+          <br>
+          <span>Search results found: <b> {{ total }}</b></span> 
+        {% endif %}
+        <table class="stack unstriped hover">
+         
+            <tr>
+              <th width="200">Notes</th>
+              <th width="200">Status</th>
+              <th width="200">Last updated on</th>
+              <th width="200">created on</th>
+              <th width="200"></th>
+            </tr>
+      
+          <tbody>
+            {% for note in notes %}
+              <tr>
+                <td><a href="{% url 'my_app:update_notes' note.id %}">{{ note.title }}</a></td>
+                {% if note.status == 'Active' %}
+                  <td><strong style="color: darkgreen; font-weight: 300;">{{ note.status }}</strong></td>
+                {% else %}
+                  <td><strong style="color:crimson; font-weight: 300;">{{ note.status }}</strong></td>
+                {% endif %}
+                <td>{{ note.updatedOn }}</td>
+                <td>{{ note.createdOn }}</td>
+                <td>
+                  <a class="small button" href="{% url 'my_app:update_notes' note.id %}">Edit</a>
+                  <a class="small alert button" href="{% url 'my_app:delete_notes' note.id %}">Delete</a>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        
+        {% comment %} {% if notes.has_other_pages %}
+          <nav aria-label="Pagination">
+            <ul class="pagination">
+              {% if notes.has_previous %}
+                {% if query %}
+                  <li class="pagination-previous"><a href="?page={{ notes.previous_page_number }}&search={{ query }}"></a></li>
+                {% else %}
+                  <li class="pagination-previous"><a href="?page={{ notes.previous_page_number }}"></a></li>
+                {% endif %}
+              {% else %}
+                <li class="pagination-previous disabled"><span></span></li>
+              {% endif %}
+                  
+              {% if currentPage == '1' %}
+                <li><a class="disabled">Prev</a></li>
+              {% else %}
+                {% if query %}
+                  <li><a href="?page={{ currentPage|add:"-1" }}&search={{ query }}">Prev</a></li>
+                {% else %}
+                  <li><a href="?page={{ currentPage|add:"-1" }}">Prev</a></li>
+                {% endif %}
+              {% endif %}
+
+              {% for i in notes.paginator.page_range %}
+                {% if notes.number == i %}
+                  <li class="current">
+                    <span>{{ i }} <span class="sr-only"></span></span>
+                  </li>
+                {% else %}
+                  {% if query %}
+                    <li><a href="?page={{ i }}&search={{ query }}">{{ i }}</a></li>
+                  {% else %}
+                    <li><a href="?page={{ i }}">{{ i }}</a></li>
+                  {% endif %}
+                {% endif %}
+              {% endfor %}
+
+            {% if notes.has_next %}
+              {% if query %}
+                <li><a href="?page={{ currentPage|add:"1" }}&search={{ query }}">Next</a></li>
+              {% else %}
+                <li><a href="?page={{ currentPage|add:"1" }}">Next</a></li>
+              {% endif %}
+            {% else %}
+              <li><a class="disabled">Next</a></li>
+            {% endif %}
+    
+            {% if notes.has_next %}
+                {% if query %}
+                  <li class="pagination-next"><a href="?page={{ notes.next_page_number }}&search={{ query }}"></a></li>
+                {% else %}
+                  <li class="pagination-next"><a href="?page={{ notes.next_page_number }}"></a></li>
+                {% endif %}
+            {% else %}
+                <li class="pagination-next disabled"><span></span></li>
+            {% endif %}
+
+          </ul>
+          </nav>
+        {% endif %} {% endcomment %}
+
+        {% if notes.has_other_pages %}
+        <span>Page <b>{{currentPage}}</b> of <b>{{lastPage}}</b></span>
+
+          <nav aria-label="Pagination">
+            <ul class="pagination">
+
+              {% if notes.has_previous %}
+                {% if query %}
+                  <li ><a href="?page=1&search={{ query }}">First page</a></li>
+                {% else %}
+                  <li ><a href="?page=1">First page</a></li>
+                {% endif %}
+              {% else %}
+                {% comment %} <li class="disabled"><span>First page</span></li> {% endcomment %}
+              {% endif %}
+
+              {% if notes.has_previous %}
+                {% if query %}
+                  <li ><a href="?page={{ notes.previous_page_number }}&search={{ query }}">Previous</a></li>
+                {% else %}
+                  <li ><a href="?page={{ notes.previous_page_number }}">Previous</a></li>
+                {% endif %}
+              {% else %}
+                {% comment %} <li class="disabled"><span>Previous</span></li> {% endcomment %}
+              {% endif %}
+
+              {% for i in notes.paginator.page_range %}
+                  {% if i == 1 %}
+                      {% if notes.number == i %}
+                          <li class="current">
+                            <span>{{ i }} <span class="sr-only"></span></span>
+                          </li>
+                      {% else %}
+                        {% if query %}
+                          <li><a href="?page={{ i }}&search={{ query }}">{{ i }}</a></li>
+                        {% else %}
+                          <li><a href="?page={{ i }}">{{ i }}</a></li>
+                        {% endif %}
+                      {% endif %}
+                  {% endif %}
+
+                  {% if i == 2 %}
+                      {% if notes.number == i %}
+                        <li class="current">
+                          <span>{{ i }} <span class="sr-only"></span></span>
+                        </li>
+                      {% else %}
+                        {% if query %}
+                          <li><a href="?page={{ i }}&search={{ query }}">{{ i }}</a></li>
+                        {% else %}
+                          <li><a href="?page={{ i }}">{{ i }}</a></li>
+                        {% endif %}
+                      {% endif %}
+                  {% endif %}
+
+                  {% if i != 1 and i != 2 %}
+                      {% if notes.number == i %}
+                        <li class="current">
+                          <span>{{ i }} <span class="sr-only"></span></span>
+                        </li>
+                      {% else %}
+                          {% if notes.number|add:"-4" == i %}
+                            <li>
+                                <a class="page-link" >...</a>
+                            </li>
+                          {% endif %}
+
+                          {% if notes.number|add:"3" >= i and notes.number|add:"-3" <= i %}
+                            {% if query %}
+                              <li><a href="?page={{ i }}&search={{ query }}">{{ i }}</a></li>
+                            {% else %}
+                              <li><a href="?page={{ i }}">{{ i }}</a></li>
+                            {% endif %}
+                          {% endif %}
+
+                          {% if notes_page.number|add:"4" == i %}
+                            <li>
+                              <a class="page-link" href="">...</a>
+                            </li>
+                          {% endif %}
+
+                      {% endif %}
+                  {% endif %}
+              {% endfor %}
+
+              {% if notes.has_next %}
+                {% if query %}
+                  <li><a href="?page={{ notes.next_page_number }}&search={{ query }}">Next</a></li>
+                {% else %}
+                  <li><a href="?page={{ notes.next_page_number }}">Next</a></li>
+                {% endif %}
+              {% else %}
+                  {% comment %} <li class="disabled"><span>Next</span></li> {% endcomment %}
+              {% endif %}
+
+              {% if notes.has_next %}
+                {% if query %}
+                  <li><a href="?page={{ lastPage }}&search={{ query }}">Last page</a></li>
+                {% else %}
+                  <li><a href="?page={{ lastPage }}">Last page</a></li>
+                {% endif %}
+              {% else %}
+                {% comment %} <li class="disabled"><span>Last page</span></li> {% endcomment %}
+              {% endif %}
+            </ul>
+          </nav>
+        {% endif %}
+
+
+      </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -14,14 +14,17 @@ from django.core.paginator import Paginator
 from django.db.models import Q, Exists, OuterRef
 from django.core import serializers 
 from my_app.serializers import NoteSerializer
-
+import math
 
 def index(request):
+    return render(request, 'my_app/index.html')
+
+def viewNotes(request):
     if request.user.is_authenticated:
         keyword = request.GET.get('search') or ''
 
         if (keyword != ''):
-            q_object = Q(owner=request.user.id) and Q(title__icontains=keyword) | Q(status__icontains=keyword) | Q(description__icontains=keyword) | Q(id__icontains=keyword) | Q(owner__username=keyword) | Q(owner__first_name=keyword) | Q(owner__last_name=keyword)
+            q_object = Q(owner=request.user.id) and Q(title__icontains=keyword) | Q(description__icontains=keyword) | Q(id__icontains=keyword) | Q(owner__username=keyword) | Q(owner__first_name=keyword) | Q(owner__last_name=keyword)
             notes_list = Notes.objects.filter(q_object)
         else:
             notes_list = Notes.objects.filter(owner=request.user.id)
@@ -36,12 +39,14 @@ def index(request):
             notes = paginator.page(1)
         except EmptyPage:
             notes = paginator.page(paginator.num_pages)
+
+        total = notes_list.count()
+        lastPage = total / 5
     else:
         notes = Notes.objects.all()
         keyword = ''
 
-    return render(request, 'my_app/index.html', {'notes': notes, 'query':keyword})
-
+    return render(request, 'my_app/notes_list.html', {'notes': notes, 'query':keyword, 'currentPage': page, 'lastPage': math.ceil(lastPage), 'total':total})
 
 def user_login(request):
     if request.user.is_authenticated:

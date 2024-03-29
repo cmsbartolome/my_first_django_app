@@ -7,7 +7,7 @@
     class="callout {% if message.tags %} {{ message.tags }} {% endif %}"
     data-closable
   >
-    {{ message }}   <a href="{% url 'my_app:index' %}">Go back to notes list</a>
+    {{ message }}   <a href="{% url 'my_app:notes' %}">Go back to notes list</a>
     <button
       class="close-button"
       aria-label="Dismiss alert"

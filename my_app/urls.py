@@ -11,6 +11,7 @@ urlpatterns = [
     path('login/', views.user_login, name='login'),
     path('profile/', views.profile, name='profile'),
     path('add_notes/', views.createNotes, name='add_notes'),
+    path('notes/', views.viewNotes, name='notes'),
     path('update_notes/<str:pk>/', views.updateNotes, name='update_notes'),
     path('delete_notes/<str:pk>/', views.deleteNotes, name='delete_notes'),
     path('data/', views.getData, name="data"),

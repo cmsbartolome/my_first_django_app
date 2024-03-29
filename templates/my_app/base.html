@@ -21,80 +21,115 @@
   </head>
  
   <body>
-    <div
-      class="title-bar"
-      data-responsive-toggle="responsive-menu"
-      data-hide-for="medium"
-    >
-      <button
-        class="menu-icon"
-        type="button"
-        data-toggle="responsive-menu"
-      ></button>
-      <div class="title-bar-title">My First Django App</div>
+    <div class="off-canvas position-left" id="offCanvas" data-off-canvas>
+      <!-- Your menu or Off-canvas content goes here -->
+      <ul class="vertical menu" data-responsive-menu="drilldown medium-accordion" style="max-width: 250px;">
+        <li>
+          <a href="{% url 'my_app:index' %}">Home</a>
+          <!-- <ul class="vertical menu">
+            <li>
+              <a href="#">Item 1A</a>
+              <ul class="vertical menu">
+                <li><a href="#">Item 1A</a></li>
+                <li><a href="#">Item 1B</a></li>
+                <li><a href="#">Item 1C</a></li>
+                <li><a href="#">Item 1D</a></li>
+                <li><a href="#">Item 1E</a></li>
+              </ul>
+            </li>
+            <li><a href="#">Item 1B</a></li>
+          </ul> -->
+        </li>
+        <li>
+          <a href="{% url 'my_app:profile' %}">Profile</a>
+        </li>
+        <li>
+          <a href="{% url 'my_app:notes' %}">Note lists</a>
+        </li>
+        <li>
+          <a href="{% url 'my_app:add_notes' %}">Create note</a>
+        </li>
+      </ul>
     </div>
-
-    <div class="top-bar" id="responsive-menu">
-          <div class="top-bar-left show-for-large">
-            <ul class="menu">
-              <li class="menu-text"><span class="menu-icon" data-toggle="offCanvas"></span></li>
-              <li class="menu-text" data-hide-for="small">My First Django App</li>
-            </ul>
-          </div>
-          <div class="top-bar-right">
-            <ul class="dropdown menu" data-dropdown-menu>
-              <li class="has-submenu">
-                <a href="{% url 'my_app:index' %}">Home</a>
-                <ul class="submenu menu vertical" data-submenu>
-                  {% if user.is_authenticated %}
-                  <li><a href="{% url 'my_app:profile' %}">Profile</a></li>
-                  <li><a href="#" data-toggle="logoutModal">Logout</a></li>
-                  {% else %}
-                  <li><a href="{% url 'my_app:login' %}">Login</a></li>
-                  <li><a href="{% url 'my_app:register' %}">Register</a></li>
-                  <li><a href="{% url 'admin:index' %}">Admin</a></li>
-                  {% endif %}
-                </ul>
-              </li>
-              <li><a href="#0">About-us</a></li>
-              <li><a href="#0">Contact-us</a></li>
-              
-            </ul>
-            <!-- <ul class="menu">
-              <li><input type="search" placeholder="Search" /></li>
-              <li><button type="button" class="button">Search</button></li>
-            </ul> -->
+    <div class="off-canvas-content" data-off-canvas-content>
+      <!-- Your page content lives here -->
+      <div
+        class="title-bar"
+        data-responsive-toggle="responsive-menu"
+        data-hide-for="medium"
+      >
+        <button
+          class="menu-icon"
+          type="button"
+          data-toggle="responsive-menu"
+        ></button>
+        <div class="title-bar-title">My First Django App</div>
       </div>
-    </div>
 
-    <div class="grid-container">
-      {% block body_block %} {% endblock %}
-      {% if user.is_authenticated %}
-        <div class="reveal" id="logoutModal" data-reveal data-close-on-click="true" data-animation-in="slide-in-down" data-animation-out="slide-out-up">
-          <div style="padding: 10px;">
-            <h3>Are you sure you want to logout already</h3>
-            <a class="button alert" href="{% url 'logout' %}">Yes</a>
-            <button class="close-button" data-close aria-label="Close modal" type="button">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
+      <div class="top-bar" id="responsive-menu">
+            <div class="top-bar-left show-for-large">
+              <ul class="menu">
+                {% if user.is_authenticated %} 
+                  <li class="menu-text"><span class="menu-icon" data-toggle="offCanvas"></span></li>
+                {% endif %}
+                <li class="menu-text" data-hide-for="small">My First Django App</li>
+              </ul>
+            </div>
+            <div class="top-bar-right">
+              <ul class="dropdown menu" data-dropdown-menu>
+                <li class="has-submenu">
+                  <a href="{% url 'my_app:index' %}">Home</a>
+                  <ul class="submenu menu vertical" data-submenu>
+                    {% if user.is_authenticated %}
+                    <li><a href="{% url 'my_app:profile' %}">Profile</a></li>
+                    <li><a href="#" data-toggle="logoutModal">Logout</a></li>
+                    {% else %}
+                    <li><a href="{% url 'my_app:login' %}">Login</a></li>
+                    <li><a href="{% url 'my_app:register' %}">Register</a></li>
+                    <li><a href="{% url 'admin:index' %}">Admin</a></li>
+                    {% endif %}
+                  </ul>
+                </li>
+                <li><a href="#0">About-us</a></li>
+                <li><a href="#0">Contact-us</a></li>
+                
+              </ul>
+              <!-- <ul class="menu">
+                <li><input type="search" placeholder="Search" /></li>
+                <li><button type="button" class="button">Search</button></li>
+              </ul> -->
         </div>
-      {% endif %}
+      </div>
 
-      <div class="cell small-1 medium-3 large-4 loader margin-bottom-3 loader">
-        <div class="sk-fading-circle">
-            <div class="sk-circle1 sk-circle"></div>
-            <div class="sk-circle2 sk-circle"></div>
-            <div class="sk-circle3 sk-circle"></div>
-            <div class="sk-circle4 sk-circle"></div>
-            <div class="sk-circle5 sk-circle"></div>
-            <div class="sk-circle6 sk-circle"></div>
-            <div class="sk-circle7 sk-circle"></div>
-            <div class="sk-circle8 sk-circle"></div>
-            <div class="sk-circle9 sk-circle"></div>
-            <div class="sk-circle10 sk-circle"></div>
-            <div class="sk-circle11 sk-circle"></div>
-            <div class="sk-circle12 sk-circle"></div>
+      <div class="grid-container">
+        {% block body_block %} {% endblock %}
+        {% if user.is_authenticated %}
+          <div class="reveal" id="logoutModal" data-reveal data-close-on-click="true" data-animation-in="slide-in-down" data-animation-out="slide-out-up">
+            <div style="padding: 10px;">
+              <h3>Are you sure you want to logout already</h3>
+              <a class="button alert" href="{% url 'logout' %}">Yes</a>
+              <button class="close-button" data-close aria-label="Close modal" type="button">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+          </div>
+        {% endif %}
+
+        <div class="cell small-1 medium-3 large-4 loader margin-bottom-3 loader">
+          <div class="sk-fading-circle">
+              <div class="sk-circle1 sk-circle"></div>
+              <div class="sk-circle2 sk-circle"></div>
+              <div class="sk-circle3 sk-circle"></div>
+              <div class="sk-circle4 sk-circle"></div>
+              <div class="sk-circle5 sk-circle"></div>
+              <div class="sk-circle6 sk-circle"></div>
+              <div class="sk-circle7 sk-circle"></div>
+              <div class="sk-circle8 sk-circle"></div>
+              <div class="sk-circle9 sk-circle"></div>
+              <div class="sk-circle10 sk-circle"></div>
+              <div class="sk-circle11 sk-circle"></div>
+              <div class="sk-circle12 sk-circle"></div>
+          </div>
         </div>
       </div>
     </div>
